@@ -1,9 +1,11 @@
 /**
  * MeinThread
  */
-public class MeinThread {
+public class MeinThread extends Thread  {
+ //Objektvariablen
+ String nameString;
+ int wait;
 
-    public static void main(String[] args) {
-        
+     
     } 
-}
+    
