@@ -1,7 +1,7 @@
 1. Java Main Erzeuge `Thread` und `MeinThread`
 2. Fügen sie die die main methode hinzu
 ````java 
-public class ErzeugeThreads {
+public class ErzeugeThreads { 
 
     public static void main(String[] args) {
         

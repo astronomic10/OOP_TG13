@@ -5,7 +5,7 @@ public class LinkedList {
     public static void main(String[] args){
        
         // Linked List erzeugen
-       LinkedList <String> einkaufliste = new LinkedList<>();
+       LinkedList <String> einkaufliste = new LinkedList();
 
        //Werte hinzufügen
        einkaufliste.add("Milch");
