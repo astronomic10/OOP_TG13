@@ -53,23 +53,25 @@ public class Tree {
 
     public int hoehe()
     {
+        //Initialisiee Lokale variablen
         int l = 0;
         int r = 0;
+
+        //Fall in dem der Wurzelknoten null ist
         if(root.links != null)
         {
             l = hoehe(root.links) +1;
         }
+        //Fall bei dem dem nicht null ist
          if(root.rechts != null)
         {
             r = hoehe(root.rechts) +1;
         }
+        //Höhe des Baums zurückgeben
         return Math.max(l, r);
     }
 
 
-  
-    
-    
   private int hoehe(Node parent) {
     int l = 0;
     int r = 0;
@@ -83,7 +85,6 @@ public class Tree {
         }
         return Math.max(l, r);
     }
-
 
 
 public int anzahl()
@@ -109,5 +110,3 @@ private int anzahl(Node parent) {
 }
     
 }
-
-
