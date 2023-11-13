@@ -12,7 +12,7 @@ public class Tree {
     {
         if(root == null)
         {
-            root = new Node(value);
+            root = new Node(value, null);
         }
         else
         {
@@ -30,7 +30,7 @@ public class Tree {
             //Wenn der linke Kinderknoen des Elternknotens null ist, dann wird der neue Knoten als Kinderknoten des Elternknotens eingefügt
             if(parent.links == null)
             {
-                parent.links = new Node(value);
+                parent.links = new Node(value, parent);
             }
             else
             {
@@ -42,7 +42,7 @@ public class Tree {
         {
                if(parent.rechts == null)
             {
-                parent.rechts = new Node(value);
+                parent.rechts = new Node(value, parent);
             }
             else
             {
@@ -50,6 +50,64 @@ public class Tree {
             }
         }
     }
+
+    public int hoehe()
+    {
+        int l = 0;
+        int r = 0;
+        if(root.links != null)
+        {
+            l = hoehe(root.links) +1;
+        }
+         if(root.rechts != null)
+        {
+            r = hoehe(root.rechts) +1;
+        }
+        return Math.max(l, r);
+    }
+
+
+  
+    
+    
+  private int hoehe(Node parent) {
+    int l = 0;
+    int r = 0;
+         if(parent.links != null)
+        {
+            l = hoehe(parent.links) +1;
+        }
+         if(parent.rechts != null)
+        {
+            r = hoehe(parent.rechts) +1;
+        }
+        return Math.max(l, r);
+    }
+
+
+
+public int anzahl()
+  {
+    if(root == null)
+    {
+        return 0;
+    }
+    else
+    {
+        return 1 + anzahl(root.links) + anzahl(root.rechts);
+    }
+  }
+private int anzahl(Node parent) {
+    if(parent == null)
+    {
+        return 0;
+    }
+    else
+    {
+        return 1 + anzahl(parent.links) + anzahl(parent.rechts);
+    }
+}
+    
 }
 
 
