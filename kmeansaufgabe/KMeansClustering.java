@@ -1,95 +1,72 @@
 package kmeansaufgabe;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 public class KMeansClustering {
-   public static void main(String[] args) {
-       // Daten vorbereiten
-       List<DataPoint> dataPoints = new ArrayList<>();
-       dataPoints.add(new DataPoint(9, 11));
-       dataPoints.add(new DataPoint(4, 12));
-       dataPoints.add(new DataPoint(13, 13));
-       dataPoints.add(new DataPoint(13, 14));
-       dataPoints.add(new DataPoint(10, 15));
-       dataPoints.add(new DataPoint(2, 16));
-       dataPoints.add(new DataPoint(10, 17));
-       dataPoints.add(new DataPoint(5, 18));
-       dataPoints.add(new DataPoint(4, 19));
-       dataPoints.add(new DataPoint(7, 20));
-       // K festlegen
-       int k = 3;
-       // Initiale Cluster-Zentren auswählen
-       List<DataPoint> centroids = new ArrayList<>();
-       centroids.add(dataPoints.get(0));
-       centroids.add(dataPoints.get(10));
-       centroids.add(dataPoints.get(5));
-       // Clustering durchführen
-       boolean converged = false;
-       while (!converged) {
-           // Zuordnung der Datenpunkte zu den Clustern
-           List<List<DataPoint>> clusters = new ArrayList<>();
-           for (int i = 0; i < k; i++) {
-               clusters.add(new ArrayList<>());
-           }
-           for (DataPoint dataPoint : dataPoints) {
-               int closestCluster = 0;
-               double minDistance = Double.POSITIVE_INFINITY;
-               for (int i = 0; i < k; i++) {
-                   double distance = dataPoint.distanceTo(centroids.get(i));
-                   if (distance < minDistance) {
-                       minDistance = distance;
-                       closestCluster = i;
-                   }
-               }
-               clusters.get(closestCluster).add(dataPoint);
-           }
-           // Neue Cluster-Zentren berechnen
-           centroids = new ArrayList<>();
-           for (List<DataPoint> cluster : clusters) {
-               if (cluster.size() > 0) {
-                   double[] sum = new double[cluster.get(0).getDimension()];
-                   for (DataPoint dataPoint : cluster) {
-                       for (int i = 0; i < sum.length; i++) {
-                           sum[i] += dataPoint.getCoordinate(i);
-                       }
-                   }
-                   centroids.add(new DataPoint(sum));
-               }
-           }
-           // Konvergenz prüfen
-           converged = true;
-           for (int i = 0; i < k - 1; i++) {
-               if (!centroids.get(i).equals(centroids.get(i + 1))) {
-                   converged = false;
-                   break;
-               }
-           }
-       }
-       // Cluster-Ergebnisse ausgeben
-       System.out.println("Cluster-Ergebnisse:");
-       for (int i = 0; i < k; i++) {
-           System.out.println("Cluster " + i + ": " + clusters.get(i));
-       }
-   }
-   private static class DataPoint {
-       private final double[] coordinates;
-       public DataPoint(double x, double y) {
-           this.coordinates = new double[]{x, y};
-       }
-       public DataPoint(double[] sum) {
-    }
-    public int getDimension() {
-           return coordinates.length;
-       }
-       public double getCoordinate(int i) {
-           return coordinates[i];
-       }
-       public double distanceTo(DataPoint other) {
-           double sum = 0;
-           for (int i = 0; i < coordinates.length; i++) {
-               double difference = coordinates[i] - other.getCoordinate(i);
-               sum += difference * difference;
-           }
-           return Math.sqrt(sum);
-       }
-   }
-}
+
+        public static void main(String[] args) {
+            int[] ooKlassenAnzahl = {9, 4, 13, 13, 10, 2, 10, 5, 9, 4, 10, 7, 8, 12, 16, 4, 10, 13, 8, 5};
+            int k = 3; // Anzahl der Cluster
+            Map<Integer, List<Integer>> clusters = kMeansClustering(ooKlassenAnzahl, k);
+            // Ausgabe der Cluster und den zugeordneten Datensätzen
+            for (Map.Entry<Integer, List<Integer>> entry : clusters.entrySet()) {
+                System.out.println("Cluster " + entry.getKey() + ": " + entry.getValue());
+            }
+        }
+        public static Map<Integer, List<Integer>> kMeansClustering(int[] data, int k) {
+            // Initialisierung der Cluster-Mittelpunkte
+            List<Integer> clusterCenters = initializeClusterCenters(data, k);
+            Map<Integer, List<Integer>> clusters;
+            do {
+                clusters = new HashMap<>();
+                // Datensätze den Clustern zuordnen
+                for (int i = 0; i < data.length; i++) {
+                    int closestCluster = findClosestCluster(data[i], clusterCenters);
+                    clusters.computeIfAbsent(closestCluster, key -> new ArrayList<>()).add(i);
+                }
+                // Berechnung neuer Cluster-Mittelpunkte
+                List<Integer> newClusterCenters = calculateNewClusterCenters(data, clusters);
+                // Überprüfung, ob sich die Cluster-Mittelpunkte verändert haben
+                if (!clusterCenters.equals(newClusterCenters)) {
+                    clusterCenters = newClusterCenters;
+                } else {
+                    break; // Algorithmus abbrechen, wenn sich die Cluster-Mittelpunkte nicht ändern
+                }
+            } while (true);
+            return clusters;
+        }
+        private static List<Integer> initializeClusterCenters(int[] data, int k) {
+            List<Integer> centers = new ArrayList<>(k);
+            Random rand = new Random();
+            for (int i = 0; i < k; i++) {
+                int randomIndex = rand.nextInt(data.length);
+                centers.add(data[randomIndex]);
+            }
+            return centers;
+        }
+        private static int findClosestCluster(int value, List<Integer> clusterCenters) {
+            int closestCluster = 0;
+            int minDistance = Math.abs(value - clusterCenters.get(0));
+            for (int i = 1; i < clusterCenters.size(); i++) {
+                int distance = Math.abs(value - clusterCenters.get(i));
+                if (distance < minDistance) {
+                    minDistance = distance;
+                    closestCluster = i;
+                }
+            }
+            return closestCluster;
+        }
+        private static List<Integer> calculateNewClusterCenters(int[] data, Map<Integer, List<Integer>> clusters) {
+            List<Integer> newCenters = new ArrayList<>();
+            for (Map.Entry<Integer, List<Integer>> entry : clusters.entrySet()) {
+                int clusterIndex = entry.getKey();
+                List<Integer> clusterData = entry.getValue();
+                // Berechnung des Mittelwerts für den neuen Cluster-Mittelpunkt
+                int sum = 0;
+                for (int dataIndex : clusterData) {
+                    sum += data[dataIndex];
+                }
+                int newCenter = sum / clusterData.size();
+                newCenters.add(newCenter);
+            }
+            return newCenters;
+        }
+     }
