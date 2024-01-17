@@ -41,11 +41,13 @@
 **1. Wurzelknoten**
 - Gini-Wert für den gesamten Datensatz berechnen
 -Der Wurzelknoten basiert auf dem Merkmal mit dem höchsten Informationsgewinn.
+Der Gini-Wert für diese Gruppe beträgt:
 
 
 **2. Entscheidungsknoten 1: Alter <= 30**
 -Subgruppen: {1,4,6}
 -Gini-Wert für jede Subgruppe berechnen und gewichten Gini-Wert für Entscheidungsknoten berechnen.
+
 
 **3. Entscheidungsknoten 2: Einkommen <= 6000**
 -Subgruppen erstellen {1,3,6}
